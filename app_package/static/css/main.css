@@ -1,0 +1,74 @@
+
+
+/* Variables */
+:root {
+    /* #6d4d4d,  #AB91AE */
+    --color-primary: #5a5959;
+    --color-secondary: #181818;
+    --color-tertiary: #777777;
+    --text-color: #fff2e3;
+}
+
+/* Styles */
+body{
+    font-family: base;
+    font-size: 1.5em;
+    background-color: var(--color-primary);
+    color: var(--text-color);
+    padding-top: 80px;
+}
+
+/* @media (max-width: 979px) { */
+    body {
+        padding-top: 0px;
+    }
+/* } */
+
+.settings-input {
+    width: 100px;
+}
+
+.settings-list {
+    width: 600px;
+}
+
+.myborder {
+    border-style: solid;
+    border-width: 6px;
+    border-color: var(--text-color);
+}
+
+.bg-warmwhite
+{
+    background-color: var(--text-color)
+}
+
+.table {
+    font-size: .75em;
+    color: var(--text-color);
+}
+
+.temperature-chart
+.chart-container {
+    color: var(--text-color);
+    width: 800px;
+    height: 300px;
+}
+
+.nav-link:hover {
+    color: var(--text-color);
+}
+
+.left-sidebar {
+    /* background-color: #cfcfcf; */
+    background-color: var(--color-secondary);
+}
+
+.main-content {
+    min-height: 100vh;
+}
+
+.right-sidebar {
+    /* background-color: #cfcfcf; */
+    background-color: var(--color-secondary);
+}

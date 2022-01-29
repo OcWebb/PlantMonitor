@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block mainContent %}
+
+  <div class="float-start position-absolute" style="width: 200">
+    <div class="mb-4 rounded bg-dark">
+      <div class="row m-0 text-center">
+          <p class="display-6 mb-0">All Profiles</p>
+      </div>
+    </div>
+  
+    <div class="rounded myborder bg-warmwhite">
+      {% for name in allProfiles %}
+      <div class="row m-0">
+        <div class="card bg-dark {{ 'mt-2' if loop.index!=1 else ''}}">
+          <p class="display-7 mb-0">{{ name }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="row text-center settings-list mx-auto mb-3">
+    <p class="display-4 bg-dark rounded">{{ profileName }}</p>
+  </div>
+
+  <div class="settings-list bg-dark card shadow mx-auto p-3">
+
+    <div class="row">
+      <div class="col">
+        <h3>{{ form.pumpCycleLength.label }}</h3>
+      </div>
+      <div class="col">
+
+        <div class="input-group input-group-sm ms-auto settings-input" >
+          {{ form.pumpCycleLength(class="form-control bg-dark text-white text-right", value=currentSettings.pumpCycleLength) }}
+          <span class="input-group-text p-1">minutes</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h3>{{ form.lightIntensity.label }}</h3>
+      </div>
+      <div class="col">
+        
+        <div class="input-group input-group-sm ms-auto settings-input" >
+          {{ form.lightIntensity(class="form-control bg-dark text-white text-right", value=currentSettings.lightIntensity) }}
+          <span class="input-group-text">%</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h3 class="">{{ form.overrideActive.label }}</h3>
+      </div>
+      <div class="col">  
+        {% if currentSettings.overrideActive %}
+          {{ form.overrideActive(class="form-check-input float-end", value=currentSettings.overrideActive, checked=True) }}
+        {% else %}
+          {{ form.overrideActive(class="form-check-input float-end", value=currentSettings.overrideActive) }}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h3 class="">{{ form.pumpOverride.label }}</h3>
+      </div>
+      <div class="col">
+        {% if currentSettings.pumpOverride %}
+          {{ form.pumpOverride(class="form-check-input float-end", value=currentSettings.pumpOverride, checked=True) }}
+        {% else %}
+          {{ form.pumpOverride(class="form-check-input float-end", value=currentSettings.pumpOverride) }}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="row px-2">
+      {{ form.submit }}
+    </div>
+
+  </div>
+
+{% endblock %}

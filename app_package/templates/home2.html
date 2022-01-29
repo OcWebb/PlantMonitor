@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block mainContent %}
+
+<section class="row text-center">
+  <h2 class="display-6 mx-auto">{{ profileName }}</h2>
+</section>
+
+<section class="row text-dark text-center">
+  <form action="" id="updateSettings">
+
+    {% for name, value in currentSettings.items() %}
+    {% if name != 'timestamp' %}
+      <div class="card flex m-2 p-2 shadow-md">
+        <h5 class="card-title mb-1">{{ name }}</h5>
+
+        <div class="card-body p-1">
+          <input type="numeric" class="form-control" value="{{ value }}" id="{{ name }}" name="updateSettingsInput" style="width: 100px">
+        </div>
+        
+      </div>
+    {% endif %}
+    {% endfor %}
+    
+    <button class="btn btn-primary" type="submit">Save</button>
+  </form>
+</section>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+
+<script type="text/javascript">
+
+  $('#updateSettings').submit(function (e) 
+  {
+
+    requestData = 
+    {
+      lightIntensity: $("#lightIntensity").val()
+    };
+
+    e.preventDefault();
+    $.ajax({
+      type:'PUT',
+      url: "{{ url_for('updateProfileSettings', profileName=profileName) }}",
+      data: JSON.stringify(requestData),
+      contentType: "application/json",
+      success:function()
+      {
+        location.reload();
+      }
+    })
+  });
+</script>
+
+{% endblock %}

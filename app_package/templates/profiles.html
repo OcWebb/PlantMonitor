@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block mainContent %}
+
+    <div class="col" style="width: 200px;">
+    {% for name in profileNames %}
+        <div class="row m-0">
+            <div class="card bg-dark m-2">
+                <p class="display-7">{{ name }}</p>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+# activate enviroment linux
+source venv/bin/activate
+
+# activate enviroment windows
+winenv\Scripts\activate
+
+# install requirements
+pip install -r requirements.txt

@@ -1,0 +1,6 @@
+venv/
+winenv/
+deactivate/
+exit/
+node_modules/
+__pycache__/
