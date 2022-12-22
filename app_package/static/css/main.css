@@ -28,8 +28,8 @@ body{
     width: 100px;
 }
 
-.settings-list {
-    width: 600px;
+.settings-card {
+    max-width: 600px;
 }
 
 .myborder {
@@ -59,6 +59,10 @@ body{
     color: var(--text-color);
 }
 
+.text-color {
+    color: var(--text-color);
+}
+
 .left-sidebar {
     /* background-color: #cfcfcf; */
     background-color: var(--color-secondary);
@@ -71,4 +75,16 @@ body{
 .right-sidebar {
     /* background-color: #cfcfcf; */
     background-color: var(--color-secondary);
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.profileNameInput {
+    font-size: 32px;
 }

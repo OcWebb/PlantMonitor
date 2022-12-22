@@ -9,56 +9,80 @@ from app_package.forms import ProfileForm
 @app.route('/', methods= ['GET', 'POST'])
 def home():
     config = Config.query.filter_by(id = 1).first()
-    ActiveProfileName = config.active_profile.name
+    ActiveProfileName = config.active_profile.displayName
 
-    return redirect(url_for('getProfile', profileName = ActiveProfileName))
+    return redirect(url_for('getProfile', id = config.active_profile.id))
 
 @app.route('/profiles', methods= ['GET', 'POST'])
 def profiles():
     config = Config.query.filter_by(id = 1).first()
-    ActiveProfileName = config.active_profile.name
+    ActiveProfileName = config.active_profile.displayName
 
     resp = getAllProfiles()
     allProfilesNames = json.loads(resp.data)
 
     return render_template('profiles.html', profileNames = allProfilesNames, activeProfile=ActiveProfileName)
 
+@app.route('/profile/new', methods= ['GET', 'POST'])
+def newProfile():
+    newSettings = Settings()
+    newProfile = Profile(displayName="NEW PROFILE", settings=newSettings)
+    db.session.add(newProfile)
+    db.session.add(newSettings)
+    db.session.commit()
 
-@app.route('/profile/<string:profileName>', methods= ['GET', 'POST'])
-def getProfile(profileName):
-    resp = getAllProfiles()
-    allProfiles = json.loads(resp.data)
-    
-    resp = getProfileSettings(profileName)
-    profileSettings = json.loads(resp.data)
-    
+    return redirect(url_for('getProfile', id=newProfile.id))
+
+
+@app.route('/profile/<int:id>', methods= ['GET', 'POST'])
+def getProfile(id):
+    allProfilesResponse = getAllProfiles()
+    allProfiles = Profile.query.order_by(Profile.displayName)
+
+    config = Config.query.filter_by(id = 1).first()
+    activeProfile = config.active_profile.displayName
+
+    profile = Profile.query.filter_by(id = id).first()
+    profileSettings = profile.settings
     form = ProfileForm()
-
-    if request.method == "POST": #form.validate_on_submit():
-        print("\n--------------\n")
-        print(json.dumps(form))
-
-        return redirect('home')
     
-    return render_template('home.html', profileName = profileName, currentSettings=profileSettings, allProfiles=allProfiles, form=form)
+    if form.validate_on_submit():
+        form.populate_obj(profile.settings)
+
+        setToActive = form.isActive.data
+        newProfileName = form.profileName.data
+        print(newProfileName)
+
+        if (newProfileName):
+            profile.displayName = newProfileName
+        
+        if (setToActive):
+            config.active_profile = profile
+            config.active_profile_id = profile.displayName
+
+        db.session.commit()
+
+        return redirect(url_for('getProfile', id=profile.id))
+    
+    return render_template('home.html', id = profile.id, profileName=profile.displayName, currentSettings=profileSettings, allProfiles=allProfiles, form=form, activeProfile = activeProfile)
 
 
-@app.route('/api/<string:profileName>/settings', methods= ['GET'])
-def getProfileSettings(profileName):
+@app.route('/api/<int:id>/settings', methods= ['GET'])
+def getProfileSettings(id):
     """
         Gets settings for profile by name
     """
 
     try:
-        profile = Profile.query.filter_by(name = profileName).first()
+        profile = Profile.query.filter_by(id = id).first()
         return jsonify(profile.settings.serialize())
     except Exception:
-        return jsonify({ 'error': 'failed to fetch profile ' + str(profileName) }), 400
+        return jsonify({ 'error': 'failed to fetch profile, ID: ' + str(id) }), 400
 
 
-@app.route('/api/<string:profileName>/settings', methods= ['PUT'])
-def updateProfileSettings(profileName):
-    profile = Profile.query.filter_by(name = profileName).first()
+@app.route('/api/<int:id>/settings', methods= ['PUT'])
+def updateProfileSettings(id):
+    profile = Profile.query.filter_by(id = id).first()
     currentSettings = profile.settings
     
     if not request.json:
@@ -87,10 +111,10 @@ def getAllProfiles():
         Gets all profiles
     """
 
-    profiles = Profile.query.order_by(Profile.name)
+    profiles = Profile.query.order_by(Profile.displayName)
     
     if profiles is not None:
-        profileNames = [profile.name for profile in profiles]
+        profileNames = [profile.displayName for profile in profiles]
         return jsonify(profileNames)
     else:
         return jsonify({ 'error': 'failed to fetch profile list ' }), 400

@@ -9,7 +9,7 @@ class Settings(db.Model):
     # time in minutes
     pumpCycleLength = db.Column(db.Integer(), default=15, nullable=False)
     # brightness 0-100
-    lightIntensity = db.Column(db.Integer(), nullable=False)
+    lightIntensity = db.Column(db.Integer(), default=50, nullable=False)
     overrideActive = db.Column(db.Boolean(), default=False)
     pumpOverride = db.Column(db.Boolean(), default=False)
 
@@ -37,8 +37,8 @@ class Settings(db.Model):
 
 class Profile (db.Model):
     __tablename__ = 'profile'
-
-    name  = db.Column(db.String(), nullable=False, primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+    displayName  = db.Column(db.String(), nullable=False)
     settings_id = db.Column(db.Integer(), db.ForeignKey('settings.id'))
     settings = db.relationship("Settings", backref=db.backref("profile", uselist=False))
 
@@ -54,7 +54,7 @@ class Config (db.Model):
     __tablename__ = 'config'
 
     id = db.Column(db.Integer(), primary_key=True)
-    active_profile_id = db.Column(db.String(), db.ForeignKey('profile.name'))
+    active_profile_id = db.Column(db.Integer(), db.ForeignKey('profile.id'))
     active_profile = db.relationship("Profile", backref=db.backref("config", uselist=False))
 
 
