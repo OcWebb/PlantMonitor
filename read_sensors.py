@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from app_package import db
+from app_package import db, app
 from app_package.models import Reading
 from adafruit_dht import DHT11
 # from matplotlib import pyplot as plt
@@ -33,9 +33,10 @@ while True:
         avg_humidity = humidity_totaled/samples
         print("\nAVERAGE\nTemp: {:.1f} F    Humidity: {}%\n".format(avg_temp, avg_humidity))
         
-        data = Reading(temperature=avg_temp, humidity=avg_humidity)
-        db.session.add(data)
-        db.session.commit()
+        with app.app_context():
+            data = Reading(temperature=avg_temp, humidity=avg_humidity)
+            db.session.add(data)
+            db.session.commit()
 
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
@@ -50,7 +51,6 @@ while True:
     
 
     sleep(delay)
-
 
 
 

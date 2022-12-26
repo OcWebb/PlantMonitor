@@ -1,31 +1,33 @@
-from app_package import db
+from app_package import db, app
 from app_package import models
 
-db.drop_all()
 
-db.create_all()
+with app.app_context():
+    db.drop_all()
 
-defaultSettings = models.Settings(pumpCycleLength = 15, lightIntensity = 100)
-defaultProfile = models.Profile(id=0, displayName = "Default Profile", settings = defaultSettings)
+    db.create_all()
 
-db.session.add(defaultSettings)
-db.session.add(defaultProfile)
+    defaultSettings = models.Settings(pumpCycleLength = 15, lightIntensity = 100)
+    defaultProfile = models.Profile(id=0, displayName = "Default Profile", settings = defaultSettings)
 
-profileOneSettings = models.Settings(pumpCycleLength = 20, lightIntensity = 50)
-profileOne = models.Profile(id=1, displayName = "Profile One", settings = profileOneSettings)
+    db.session.add(defaultSettings)
+    db.session.add(defaultProfile)
 
-db.session.add(profileOneSettings)
-db.session.add(profileOne)
+    profileOneSettings = models.Settings(pumpCycleLength = 20, lightIntensity = 50)
+    profileOne = models.Profile(id=1, displayName = "Profile One", settings = profileOneSettings)
 
-lettuceProfileSettings = models.Settings(pumpCycleLength = 5, lightIntensity = 75, overrideActive = True)
-lettuceProfile = models.Profile(id=2, displayName = "Lettuce", settings = lettuceProfileSettings)
+    db.session.add(profileOneSettings)
+    db.session.add(profileOne)
 
-db.session.add(lettuceProfileSettings)
-db.session.add(lettuceProfile)
+    lettuceProfileSettings = models.Settings(pumpCycleLength = 5, lightIntensity = 75, overrideActive = True)
+    lettuceProfile = models.Profile(id=2, displayName = "Lettuce", settings = lettuceProfileSettings)
 
-config = models.Config(id = 1, active_profile = defaultProfile)
+    db.session.add(lettuceProfileSettings)
+    db.session.add(lettuceProfile)
 
-db.session.add(config)
+    config = models.Config(id = 1, active_profile = defaultProfile)
+
+    db.session.add(config)
 
 
-db.session.commit()
+    db.session.commit()

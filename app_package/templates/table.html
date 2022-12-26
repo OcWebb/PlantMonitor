@@ -20,7 +20,7 @@
             <tr>
                 <th>{{ reading.timestamp.strftime('%x %X') }}</th>
                 <td>{{ "%.2f °F"|format(reading.temperature) }}</td>
-                <td>{{ reading.humidity }}</td>
+                <td>{{ "%.2f"|format(reading.humidity) }} %</td>
             </tr>
         {% endfor %}
     </tbody>
